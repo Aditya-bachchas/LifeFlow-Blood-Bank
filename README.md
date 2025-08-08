@@ -223,7 +223,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For support and questions:
 - Email: support@lifeflow.com
-- Documentation: https://docs.lifeflow.com
+- Documentation: file:///C:/Users/adity/Desktop/Blood%20bank/blood-bank-india-3d.html
 - Issues: GitHub Issues
 
 ---
