@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeFlow Blood Bank - 3D Enhanced</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+    <style>
+        body { 
+            font-family: 'Arial', sans-serif; 
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .btn { 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, #ef4444, #dc2626); 
+            color: white; 
+            border: none;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+        .card { 
+            background: white; 
+            border-radius: 12px; 
+            padding: 20px; 
+            margin: 10px 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* 3D Background */
+        #three-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        /* AI Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            font-size: 24px;
+        }
+        
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chatbot-header {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        
+        .message.user {
+            background: #ef4444;
+            color: white;
+            margin-left: auto;
+        }
+        
+        .message.bot {
+            background: white;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .chatbot-input {
+            padding: 15px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            outline: none;
+        }
+        
+        .chatbot-input button {
+            padding: 10px 15px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+            font-size: 24px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        /* Blood Drop Animation */
+        .blood-drop {
+            position: absolute;
+            width: 20px;
+            height: 30px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: blood-drop-fall 4s linear infinite;
+        }
+        
+        @keyframes blood-drop-fall {
+            0% { transform: translateY(-100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; transform: translateY(-90vh) scale(1); }
+            90% { opacity: 1; transform: translateY(0vh) scale(1); }
+            100% { transform: translateY(100vh) scale(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Animation Background -->
+    <div id="three-container"></div>
+    
+    <!-- Floating Elements -->
+    <div class="floating-element" style="top: 10%; left: 5%; color: #ef4444;">🩸</div>
+    <div class="floating-element" style="top: 20%; right: 10%; color: #dc2626;">❤️</div>
+    <div class="floating-element" style="top: 60%; left: 15%; color: #b91c1c;">💉</div>
+    <div class="floating-element" style="top: 80%; right: 5%; color: #ef4444;">🏥</div>
+    
+    <!-- Blood Drops -->
+    <div class="blood-drop" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="blood-drop" style="left: 30%; animation-delay: 1s;"></div>
+    <div class="blood-drop" style="left: 50%; animation-delay: 2s;"></div>
+    <div class="blood-drop" style="left: 70%; animation-delay: 3s;"></div>
+    <div class="blood-drop" style="left: 90%; animation-delay: 0.5s;"></div>
+
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-lg p-4 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-red-600 flex items-center">
+                <span style="font-size: 28px; margin-right: 10px;">🩸</span>
+                LifeFlow Blood Bank
+            </h1>
+            <div class="space-x-4">
+                <button onclick="showPage('home')" class="btn">🏠 Home</button>
+                <button onclick="showPage('banks')" class="btn">🏥 Blood Banks</button>
+                <button onclick="showPage('donate')" class="btn">❤️ Donate</button>
+                <button onclick="showPage('register')" class="btn">📝 Register</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="max-w-6xl mx-auto p-6">
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-bold mb-6 bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
+                    Save Lives Through Blood Donation
+                </h1>
+                <p class="text-xl text-gray-600 mb-8">Every drop counts in the journey to save lives</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-4xl mb-4">🩸</div>
+                    <h3 class="text-2xl font-bold text-red-600" id="totalDonors">15,420</h3>
+                    <p>Total Donors</p>
+                </div>
+                <div class="card text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-4xl mb-4">🏥</div>
+                    <h3 class="text-2xl font-bold text-red-600" id="totalBanks">3</h3>
+                    <p>Blood Banks</p>
+                </div>
+                <div class="card text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-4xl mb-4">❤️</div>
+                    <h3 class="text-2xl font-bold text-red-600" id="livesSaved">46,260</h3>
+                    <p>Lives Saved</p>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button onclick="showPage('banks')" class="btn btn-primary mr-4 text-lg">
+                    🔍 Find Blood Banks
+                </button>
+                <button onclick="showPage('donate')" class="btn btn-primary text-lg">
+                    ❤️ Donate Blood
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blood Banks Page -->
+    <div id="banks" class="page">
+        <div class="max-w-6xl mx-auto p-6">
+            <h2 class="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
+                🏥 Blood Banks
+            </h2>
+            <div class="mb-6 bg-white p-6 rounded-lg shadow-lg">
+                <div class="flex flex-wrap gap-4 items-end">
+                    <div class="flex-1">
+                        <label class="block mb-2 font-semibold">📍 Location</label>
+                        <input type="text" id="searchLocation" placeholder="Search by location..." class="w-full p-3 border rounded-lg">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block mb-2 font-semibold">🩸 Blood Group</label>
+                        <select id="searchBloodGroup" class="w-full p-3 border rounded-lg">
+                            <option value="">All Blood Groups</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <button onclick="searchBanks()" class="btn btn-primary px-8 py-3">
+                        🔍 Search
+                    </button>
+                </div>
+            </div>
+            <div id="banksList"></div>
+        </div>
+    </div>
+
+    <!-- Donate Page -->
+    <div id="donate" class="page">
+        <div class="max-w-2xl mx-auto p-6">
+            <div class="card">
+                <div class="text-center mb-6">
+                    <div class="text-6xl mb-4">❤️</div>
+                    <h2 class="text-3xl font-bold mb-2">Schedule Blood Donation</h2>
+                    <p class="text-gray-600">Your donation can save up to 3 lives</p>
+                </div>
+                <form id="donationForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2 font-semibold">👤 Full Name</label>
+                            <input type="text" id="donorName" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 font-semibold">🩸 Blood Group</label>
+                            <select id="donorBloodGroup" class="w-full p-3 border rounded-lg" required>
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2 font-semibold">📞 Phone Number</label>
+                            <input type="tel" id="donorPhone" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 font-semibold">📅 Preferred Date</label>
+                            <input type="date" id="donorDate" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full py-3 text-lg">
+                        ❤️ Schedule Donation
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="register" class="page">
+        <div class="max-w-2xl mx-auto p-6">
+            <div class="card">
+                <div class="text-center mb-6">
+                    <div class="text-6xl mb-4">📝</div>
+                    <h2 class="text-3xl font-bold mb-2">Register Account</h2>
+                    <p class="text-gray-600">Join our community of life savers</p>
+                </div>
+                <form id="registrationForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2 font-semibold">👤 Full Name</label>
+                            <input type="text" id="userName" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 font-semibold">📧 Email</label>
+                            <input type="email" id="userEmail" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2 font-semibold">📞 Phone</label>
+                            <input type="tel" id="userPhone" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 font-semibold">🩸 Blood Group</label>
+                            <select id="userBloodGroup" class="w-full p-3 border rounded-lg" required>
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2 font-semibold">🔒 Password</label>
+                        <input type="password" id="userPassword" class="w-full p-3 border rounded-lg" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full py-3 text-lg">
+                        📝 Create Account
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div class="chatbot-container">
+        <button class="chatbot-toggle" onclick="toggleChatbot()">🤖</button>
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                LifeFlow AI Assistant
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">
+                    Hello! I'm your LifeFlow AI assistant. How can I help you today? I can help you find blood banks, schedule donations, or answer questions about blood donation.
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Type your message..." onkeypress="handleChatbotKeyPress(event)">
+                <button onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cloud Data - Simulated API
+        const bloodBanks = [
+            {
+                id: 1,
+                name: "City General Hospital Blood Bank",
+                location: "Downtown Medical Center",
+                address: "123 Medical Drive, Downtown",
+                phone: "+1-555-0123",
+                email: "bloodbank@citygeneral.com",
+                bloodStock: {
+                    "A+": "High",
+                    "A-": "Medium",
+                    "B+": "High",
+                    "B-": "Low",
+                    "AB+": "Medium",
+                    "AB-": "Low",
+                    "O+": "High",
+                    "O-": "Medium"
+                },
+                rating: 4.8,
+                distance: "2.3 km"
+            },
+            {
+                id: 2,
+                name: "Red Cross Blood Center",
+                location: "Community Health Plaza",
+                address: "456 Health Avenue, Midtown",
+                phone: "+1-555-0456",
+                email: "donate@redcross.org",
+                bloodStock: {
+                    "A+": "Medium",
+                    "A-": "High",
+                    "B+": "Medium",
+                    "B-": "High",
+                    "AB+": "Low",
+                    "AB-": "Medium",
+                    "O+": "High",
+                    "O-": "High"
+                },
+                rating: 4.9,
+                distance: "5.1 km"
+            },
+            {
+                id: 3,
+                name: "Emergency Blood Services",
+                location: "Emergency Medical Complex",
+                address: "789 Emergency Road, Uptown",
+                phone: "+1-555-0789",
+                email: "emergency@bloodservices.com",
+                bloodStock: {
+                    "A+": "High",
+                    "A-": "High",
+                    "B+": "High",
+                    "B-": "High",
+                    "AB+": "High",
+                    "AB-": "High",
+                    "O+": "High",
+                    "O-": "High"
+                },
+                rating: 4.7,
+                distance: "8.7 km"
+            }
+        ];
+
+        // AI Chatbot Responses
+        const aiResponses = {
+            greetings: [
+                "Hello! How can I help you with blood donation today?",
+                "Hi there! I'm here to assist you with any questions about blood donation.",
+                "Welcome! I can help you find blood banks or schedule donations."
+            ],
+            bloodBanks: [
+                "I can help you find blood banks! Click on 'Blood Banks' in the navigation or tell me what blood group you're looking for.",
+                "There are several blood banks available. Would you like me to show you the nearest ones?",
+                "I can search for blood banks by location or blood group. What are you looking for?"
+            ],
+            donation: [
+                "Great! To schedule a blood donation, click on 'Donate' in the navigation or tell me your blood group.",
+                "Blood donation is a wonderful act! I can help you schedule an appointment.",
+                "Your donation can save up to 3 lives! Let me help you get started."
+            ],
+            general: [
+                "I'm here to help with blood donation questions, finding blood banks, or scheduling donations.",
+                "Feel free to ask me anything about blood donation or the LifeFlow platform.",
+                "I can assist you with navigation, blood bank information, or donation scheduling."
+            ]
+        };
+
+        // 3D Scene Setup
+        let scene, camera, renderer;
+        let heartGroup;
+
+        function init3D() {
+            // Scene setup
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            document.getElementById('three-container').appendChild(renderer.domElement);
+
+            // Camera position
+            camera.position.z = 5;
+
+            // Create floating hearts
+            createFloatingHearts3D();
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 10, 5);
+            scene.add(directionalLight);
+
+            // Animation loop
+            animate();
+        }
+
+        function createFloatingHearts3D() {
+            heartGroup = new THREE.Group();
+            
+            for (let i = 0; i < 20; i++) {
+                const geometry = new THREE.SphereGeometry(0.1, 8, 8);
+                const material = new THREE.MeshLambertMaterial({ 
+                    color: new THREE.Color().setHSL(0, 1, 0.5 + Math.random() * 0.3) 
+                });
+                const heart = new THREE.Mesh(geometry, material);
+                
+                heart.position.set(
+                    (Math.random() - 0.5) * 10,
+                    (Math.random() - 0.5) * 10,
+                    (Math.random() - 0.5) * 10
+                );
+                
+                heart.userData = {
+                    speed: Math.random() * 0.02 + 0.01,
+                    rotationSpeed: Math.random() * 0.02 + 0.01
+                };
+                
+                heartGroup.add(heart);
+            }
+            
+            scene.add(heartGroup);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotate heart group
+            if (heartGroup) {
+                heartGroup.rotation.y += 0.005;
+                
+                // Animate individual hearts
+                heartGroup.children.forEach(heart => {
+                    heart.rotation.x += heart.userData.rotationSpeed;
+                    heart.rotation.y += heart.userData.rotationSpeed;
+                    heart.position.y += Math.sin(Date.now() * heart.userData.speed) * 0.01;
+                });
+            }
+            
+            renderer.render(scene, camera);
+        }
+
+        // Chatbot Functions
+        function toggleChatbot() {
+            const window = document.getElementById('chatbotWindow');
+            window.style.display = window.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function handleChatbotKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatbotInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, 'user');
+                input.value = '';
+                
+                // Simulate AI thinking
+                setTimeout(() => {
+                    const response = generateAIResponse(message);
+                    addMessage(response, 'bot');
+                }, 1000);
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messagesContainer = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function generateAIResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+                return aiResponses.greetings[Math.floor(Math.random() * aiResponses.greetings.length)];
+            } else if (lowerMessage.includes('blood bank') || lowerMessage.includes('find')) {
+                return aiResponses.bloodBanks[Math.floor(Math.random() * aiResponses.bloodBanks.length)];
+            } else if (lowerMessage.includes('donate') || lowerMessage.includes('donation')) {
+                return aiResponses.donation[Math.floor(Math.random() * aiResponses.donation.length)];
+            } else {
+                return aiResponses.general[Math.floor(Math.random() * aiResponses.general.length)];
+            }
+        }
+
+        // Page Functions
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            if (pageId === 'banks') {
+                loadBloodBanks();
+            }
+        }
+
+        function loadBloodBanks() {
+            const banksList = document.getElementById('banksList');
+            banksList.innerHTML = '';
+
+            bloodBanks.forEach(bank => {
+                const stockHtml = Object.entries(bank.bloodStock).map(([group, level]) => {
+                    const color = level === 'High' ? 'green' : level === 'Medium' ? 'orange' : 'red';
+                    return `<span style="color: ${color}; margin-right: 10px; font-weight: bold;">${group}: ${level}</span>`;
+                }).join('');
+
+                const bankCard = document.createElement('div');
+                bankCard.className = 'card';
+                bankCard.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">🏥 ${bank.name}</h3>
+                            <p class="text-gray-600 mb-2">📍 ${bank.location}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="flex items-center text-yellow-500 mb-1">
+                                ⭐ <span class="font-semibold ml-1">${bank.rating}/5</span>
+                            </div>
+                            <div class="text-sm text-gray-500">📏 ${bank.distance}</div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <p class="mb-2"><strong>📍 Address:</strong> ${bank.address}</p>
+                        <p class="mb-2"><strong>📞 Phone:</strong> ${bank.phone}</p>
+                        <p class="mb-2"><strong>📧 Email:</strong> ${bank.email}</p>
+                    </div>
+                    <div class="mb-4">
+                        <strong>🩸 Blood Stock:</strong><br>
+                        ${stockHtml}
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="contactBank('${bank.phone}')" class="btn flex-1" style="background: #3b82f6; color: white;">
+                            📞 Contact
+                        </button>
+                        <button onclick="getDirections('${bank.address}')" class="btn flex-1" style="background: #10b981; color: white;">
+                            🗺️ Directions
+                        </button>
+                    </div>
+                `;
+                banksList.appendChild(bankCard);
+            });
+        }
+
+        function searchBanks() {
+            const location = document.getElementById('searchLocation').value.toLowerCase();
+            const bloodGroup = document.getElementById('searchBloodGroup').value;
+            
+            const filteredBanks = bloodBanks.filter(bank => {
+                const locationMatch = !location || 
+                    bank.name.toLowerCase().includes(location) || 
+                    bank.location.toLowerCase().includes(location);
+                
+                const bloodMatch = !bloodGroup || bank.bloodStock[bloodGroup] === 'High' || bank.bloodStock[bloodGroup] === 'Medium';
+                
+                return locationMatch && bloodMatch;
+            });
+
+            const banksList = document.getElementById('banksList');
+            banksList.innerHTML = '';
+
+            if (filteredBanks.length === 0) {
+                banksList.innerHTML = '<div class="text-center text-gray-500 py-8 text-lg">🔍 No blood banks found matching your criteria.</div>';
+                return;
+            }
+
+            filteredBanks.forEach(bank => {
+                const stockHtml = Object.entries(bank.bloodStock).map(([group, level]) => {
+                    const color = level === 'High' ? 'green' : level === 'Medium' ? 'orange' : 'red';
+                    return `<span style="color: ${color}; margin-right: 10px; font-weight: bold;">${group}: ${level}</span>`;
+                }).join('');
+
+                const bankCard = document.createElement('div');
+                bankCard.className = 'card';
+                bankCard.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">🏥 ${bank.name}</h3>
+                            <p class="text-gray-600 mb-2">📍 ${bank.location}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="flex items-center text-yellow-500 mb-1">
+                                ⭐ <span class="font-semibold ml-1">${bank.rating}/5</span>
+                            </div>
+                            <div class="text-sm text-gray-500">📏 ${bank.distance}</div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <p class="mb-2"><strong>📍 Address:</strong> ${bank.address}</p>
+                        <p class="mb-2"><strong>📞 Phone:</strong> ${bank.phone}</p>
+                        <p class="mb-2"><strong>📧 Email:</strong> ${bank.email}</p>
+                    </div>
+                    <div class="mb-4">
+                        <strong>🩸 Blood Stock:</strong><br>
+                        ${stockHtml}
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="contactBank('${bank.phone}')" class="btn flex-1" style="background: #3b82f6; color: white;">
+                            📞 Contact
+                        </button>
+                        <button onclick="getDirections('${bank.address}')" class="btn flex-1" style="background: #10b981; color: white;">
+                            🗺️ Directions
+                        </button>
+                    </div>
+                `;
+                banksList.appendChild(bankCard);
+            });
+        }
+
+        function contactBank(phone) {
+            alert(`📞 Calling ${phone}...\n\nIn a real application, this would initiate a phone call.`);
+        }
+
+        function getDirections(address) {
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        // Form submissions
+        document.getElementById('donationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('✅ Donation scheduled successfully! We will contact you soon.');
+            this.reset();
+        });
+
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('✅ Registration successful! Welcome to LifeFlow!');
+            this.reset();
+        });
+
+        // Window resize handler
+        window.addEventListener('resize', function() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            init3D();
+            loadBloodBanks();
+        });
+    </script>
+</body>
+</html>

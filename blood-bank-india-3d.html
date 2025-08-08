@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeFlow Blood Bank - India</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Arial', sans-serif; overflow-x: hidden; }
+        .btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary { background: #ef4444; color: white; border: none; }
+        .btn-primary:hover { background: #dc2626; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3); }
+        .card { background: white; border-radius: 12px; padding: 20px; margin: 10px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Subtle Animation Effects */
+        @keyframes gentle-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        .floating-element {
+            animation: gentle-float 3s ease-in-out infinite;
+        }
+
+        @keyframes gentle-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        .pulse-animation {
+            animation: gentle-pulse 2s ease-in-out infinite;
+        }
+
+        /* 3D AI Character Styles */
+        .ai-character {
+            font-size: 40px;
+            animation: gentle-float 2s ease-in-out infinite;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        .ai-character-large {
+            font-size: 60px;
+            animation: gentle-float 3s ease-in-out infinite;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
+        }
+        .ai-character-shadow {
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 6px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 50%;
+            animation: gentle-pulse 2s ease-in-out infinite;
+        }
+
+        /* Chatbot styles */
+        .chatbot-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+            z-index: 100;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .chatbot-button:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .chatbot-container {
+            position: fixed;
+            bottom: 110px;
+            right: 20px;
+            width: 380px;
+            height: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            z-index: 99;
+            overflow: hidden;
+            border: 3px solid #ef4444;
+        }
+        .chatbot-header {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 20px;
+            border-top-left-radius: 13px;
+            border-top-right-radius: 13px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .chatbot-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+        .chatbot-input-area {
+            display: flex;
+            padding: 20px;
+            border-top: 2px solid #e5e7eb;
+            background: white;
+        }
+        .chatbot-input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        .chatbot-send-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        .chatbot-send-btn:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+        .message-bubble {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .message-avatar {
+            font-size: 24px;
+            animation: gentle-float 2s ease-in-out infinite;
+        }
+        .message-content {
+            flex-grow: 1;
+        }
+        .message-text {
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .message-time {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .message-user .message-text {
+            background: #dbeafe;
+            color: #1e40af;
+            margin-left: auto;
+        }
+        .message-bot .message-text {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Subtle Background Elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="floating-element absolute top-1/4 left-1/4 text-red-200 text-4xl opacity-20">❤️</div>
+        <div class="floating-element absolute top-1/2 right-1/3 text-blue-200 text-3xl opacity-20" style="animation-delay: 1s;">💧</div>
+        <div class="floating-element absolute bottom-1/4 left-1/2 text-green-200 text-3xl opacity-20" style="animation-delay: 2s;">🏥</div>
+        <div class="floating-element absolute top-1/3 right-1/4 text-red-200 text-5xl opacity-15" style="animation-delay: 0.5s;">🩸</div>
+        <div class="floating-element absolute bottom-1/3 left-1/4 text-blue-200 text-3xl opacity-15" style="animation-delay: 1.5s;">💉</div>
+        <div class="floating-element absolute top-1/6 right-1/6 text-orange-200 text-3xl opacity-20" style="animation-delay: 0.8s;">🇮🇳</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg p-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-red-600">LifeFlow Blood Bank 🇮🇳</h1>
+            <div class="flex items-center space-x-4">
+                <button onclick="showPage('home')" class="btn">Home</button>
+                <button onclick="showPage('banks')" class="btn">Blood Banks</button>
+                <button onclick="showPage('donate')" class="btn">Donate</button>
+                <button onclick="showPage('register')" class="btn" id="authButton">Register</button>
+                <div id="userStatus" class="hidden">
+                    <span class="text-sm text-green-600 font-medium">Welcome, <span id="userNameDisplay"></span>!</span>
+                    <button onclick="signOut()" class="ml-2 text-sm text-red-600 hover:underline">Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="max-w-6xl mx-auto p-6">
+            <h1 class="text-4xl font-bold text-center mb-8 text-red-700">Save Lives Through Blood Donation ❤️</h1>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card text-center">
+                    <h3 class="text-2xl font-bold text-red-600" id="totalDonors">25,420</h3>
+                    <p>Total Donors</p>
+                </div>
+                <div class="card text-center">
+                    <h3 class="text-2xl font-bold text-red-600" id="totalBanks">12</h3>
+                    <p>Blood Banks</p>
+                </div>
+                <div class="card text-center">
+                    <h3 class="text-2xl font-bold text-red-600" id="livesSaved">76,260</h3>
+                    <p>Lives Saved</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <button onclick="showPage('banks')" class="btn btn-primary mr-4">Find Blood Banks</button>
+                <button onclick="showPage('donate')" class="btn btn-primary">Donate Blood</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blood Banks Page -->
+    <div id="banks" class="page">
+        <div class="max-w-6xl mx-auto p-6">
+            <h2 class="text-3xl font-bold mb-6 text-red-700">Blood Banks Across India 🏥</h2>
+            <div class="mb-6">
+                <input type="text" id="searchLocation" placeholder="Search by city or state..." class="p-2 border rounded mr-2">
+                <select id="searchBloodGroup" class="p-2 border rounded mr-2">
+                    <option value="">All Blood Groups</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+                <button onclick="searchBanks()" class="btn btn-primary">Search</button>
+            </div>
+            <div id="banksList"></div>
+        </div>
+    </div>
+
+    <!-- Donate Page -->
+    <div id="donate" class="page">
+        <div class="max-w-2xl mx-auto p-6">
+            <div class="card">
+                <h2 class="text-2xl font-bold mb-6">Schedule Blood Donation</h2>
+                <form id="donationForm">
+                    <div class="mb-4">
+                        <label class="block mb-2">Full Name</label>
+                        <input type="text" id="donorName" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Blood Group</label>
+                        <select id="donorBloodGroup" class="w-full p-2 border rounded" required>
+                            <option value="">Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Phone Number</label>
+                        <input type="tel" id="donorPhone" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Preferred Date</label>
+                        <input type="date" id="donorDate" class="w-full p-2 border rounded" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Schedule Donation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register/Sign In Page -->
+    <div id="register" class="page">
+        <div class="max-w-2xl mx-auto p-6">
+            <!-- Toggle between Register and Sign In -->
+            <div class="flex mb-6 bg-gray-100 rounded-lg p-1">
+                <button id="registerTab" class="flex-1 py-2 px-4 rounded-md bg-white shadow-sm font-medium text-red-600" onclick="showTab('register')">Register</button>
+                <button id="signInTab" class="flex-1 py-2 px-4 rounded-md text-gray-600" onclick="showTab('signin')">Sign In</button>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="card">
+                <h2 class="text-2xl font-bold mb-6">Create Account</h2>
+                <form id="registrationForm">
+                    <div class="mb-4">
+                        <label class="block mb-2">Full Name</label>
+                        <input type="text" id="regUserName" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Email</label>
+                        <input type="email" id="regUserEmail" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Phone</label>
+                        <input type="tel" id="regUserPhone" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Blood Group</label>
+                        <select id="regUserBloodGroup" class="w-full p-2 border rounded" required>
+                            <option value="">Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Password</label>
+                        <input type="password" id="regUserPassword" class="w-full p-2 border rounded" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Create Account</button>
+                </form>
+            </div>
+
+            <!-- Sign In Form -->
+            <div id="signInForm" class="card hidden">
+                <h2 class="text-2xl font-bold mb-6">Sign In</h2>
+                <form id="signInFormElement">
+                    <div class="mb-4">
+                        <label class="block mb-2">Email or Phone Number</label>
+                        <input type="text" id="signInIdentifier" class="w-full p-2 border rounded" placeholder="Enter your email or phone number" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Password</label>
+                        <input type="password" id="signInPassword" class="w-full p-2 border rounded" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Sign In</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-600">Don't have an account? <button onclick="showTab('register')" class="text-red-600 hover:underline">Register here</button></p>
+                    <p class="text-sm text-gray-600 mt-2">Forgot your password? <button onclick="showTab('forgotPassword')" class="text-red-600 hover:underline">Reset Password</button></p>
+                </div>
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div id="forgotPasswordForm" class="card hidden">
+                <h2 class="text-2xl font-bold mb-6">Reset Password</h2>
+                <form id="forgotPasswordFormElement">
+                    <div class="mb-4">
+                        <label class="block mb-2">Email Address</label>
+                        <input type="email" id="forgotPasswordEmail" class="w-full p-2 border rounded" placeholder="Enter your registered email address" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Send Reset Link</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-600">Remember your password? <button onclick="showTab('signin')" class="text-red-600 hover:underline">Sign In</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D AI Character Chatbot Button -->
+    <div class="chatbot-button" onclick="toggleChatbot()">
+        <div class="ai-character">👨‍⚕️</div>
+        <div class="ai-character-shadow"></div>
+    </div>
+
+    <!-- 3D AI Character Chatbot Container -->
+    <div class="chatbot-container hidden" id="chatbotContainer">
+        <div class="chatbot-header">
+            <div class="ai-character-large">👨‍⚕️</div>
+            <div class="header-content">
+                <h3 class="text-lg font-bold">Dr. LifeFlow AI</h3>
+                <p class="text-sm opacity-90">Your Blood Donation Assistant</p>
+            </div>
+            <button onclick="toggleChatbot()" class="text-white text-2xl leading-none">&times;</button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message-bubble message-bot">
+                <div class="message-avatar">👨‍⚕️</div>
+                <div class="message-content">
+                    <div class="message-text">नमस्ते! मैं डॉ. लाइफफ्लो हूं, आपका AI रक्तदान सहायक। मैं हिंदी और अंग्रेजी दोनों भाषाओं में बात कर सकता हूं। आप अपना नाम बताएं और मैं आपकी मदद करूंगा! / Hello! I'm Dr. LifeFlow, your AI blood donation assistant. I can speak in both Hindi and English. Tell me your name and I'll help you!</div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-input-area">
+            <input type="text" id="chatbotInput" class="chatbot-input" placeholder="अपना नाम बताएं या रक्तदान के बारे में पूछें... / Tell me your name or ask about blood donation...">
+            <button onclick="sendChatbotMessage()" class="chatbot-send-btn">💬</button>
+        </div>
+    </div>
+
+    <script>
+        // Indian Blood Banks Data - Simulated Cloud API
+        const indianBloodBanks = [
+            {
+                id: 1,
+                name: "AIIMS Delhi Blood Bank",
+                location: "New Delhi",
+                state: "Delhi",
+                address: "Sri Aurobindo Marg, Ansari Nagar, New Delhi",
+                phone: "+91-11-26588500",
+                email: "bloodbank@aiims.edu",
+                bloodStock: {
+                    "A+": "High", "A-": "Medium", "B+": "High", "B-": "Low",
+                    "AB+": "Medium", "AB-": "Low", "O+": "High", "O-": "Medium"
+                },
+                rating: 4.9,
+                distance: "2.1 km"
+            },
+            {
+                id: 2,
+                name: "KEM Hospital Blood Bank",
+                location: "Mumbai",
+                state: "Maharashtra",
+                address: "Acharya Donde Marg, Parel, Mumbai",
+                phone: "+91-22-24107000",
+                email: "bloodbank@kem.edu",
+                bloodStock: {
+                    "A+": "Medium", "A-": "High", "B+": "Medium", "B-": "High",
+                    "AB+": "Low", "AB-": "Medium", "O+": "High", "O-": "High"
+                },
+                rating: 4.8,
+                distance: "3.5 km"
+            },
+            {
+                id: 3,
+                name: "PGIMER Chandigarh Blood Bank",
+                location: "Chandigarh",
+                state: "Chandigarh",
+                address: "Sector 12, Chandigarh",
+                phone: "+91-172-2756565",
+                email: "bloodbank@pgimer.edu",
+                bloodStock: {
+                    "A+": "High", "A-": "High", "B+": "High", "B-": "High",
+                    "AB+": "High", "AB-": "High", "O+": "High", "O-": "High"
+                },
+                rating: 4.7,
+                distance: "1.8 km"
+            },
+            {
+                id: 4,
+                name: "Apollo Hospitals Blood Bank",
+                location: "Chennai",
+                state: "Tamil Nadu",
+                address: "Greams Road, Chennai",
+                phone: "+91-44-28290200",
+                email: "bloodbank@apollohospitals.com",
+                bloodStock: {
+                    "A+": "High", "A-": "Medium", "B+": "High", "B-": "Low",
+                    "AB+": "Medium", "AB-": "Low", "O+": "High", "O-": "Medium"
+                },
+                rating: 4.6,
+                distance: "4.2 km"
+            },
+            {
+                id: 5,
+                name: "Fortis Hospital Blood Bank",
+                location: "Bangalore",
+                state: "Karnataka",
+                address: "Bannerghatta Road, Bangalore",
+                phone: "+91-80-66214444",
+                email: "bloodbank@fortishealthcare.com",
+                bloodStock: {
+                    "A+": "Medium", "A-": "High", "B+": "Medium", "B-": "High",
+                    "AB+": "Low", "AB-": "Medium", "O+": "High", "O-": "High"
+                },
+                rating: 4.5,
+                distance: "5.7 km"
+            },
+            {
+                id: 6,
+                name: "Safdarjung Hospital Blood Bank",
+                location: "New Delhi",
+                state: "Delhi",
+                address: "Ansari Nagar West, New Delhi",
+                phone: "+91-11-26707444",
+                email: "bloodbank@safdarjunghospital.com",
+                bloodStock: {
+                    "A+": "High", "A-": "Medium", "B+": "High", "B-": "Low",
+                    "AB+": "Medium", "AB-": "Low", "O+": "High", "O-": "Medium"
+                },
+                rating: 4.4,
+                distance: "3.8 km"
+            },
+            {
+                id: 7,
+                name: "JJ Hospital Blood Bank",
+                location: "Mumbai",
+                state: "Maharashtra",
+                address: "Dr. E. Moses Road, Mumbai",
+                phone: "+91-22-23735555",
+                email: "bloodbank@jjhospital.org",
+                bloodStock: {
+                    "A+": "Medium", "A-": "High", "B+": "Medium", "B-": "High",
+                    "AB+": "Low", "AB-": "Medium", "O+": "High", "O-": "High"
+                },
+                rating: 4.3,
+                distance: "2.9 km"
+            },
+            {
+                id: 8,
+                name: "Victoria Hospital Blood Bank",
+                location: "Bangalore",
+                state: "Karnataka",
+                address: "Fort Road, Bangalore",
+                phone: "+91-80-26701150",
+                email: "bloodbank@victoriahospital.org",
+                bloodStock: {
+                    "A+": "High", "A-": "Medium", "B+": "High", "B-": "Low",
+                    "AB+": "Medium", "AB-": "Low", "O+": "High", "O-": "Medium"
+                },
+                rating: 4.2,
+                distance: "4.1 km"
+            }
+        ];
+
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Load data for specific pages
+            if (pageId === 'banks') {
+                loadBloodBanks();
+            }
+        }
+
+        function loadBloodBanks() {
+            const banksList = document.getElementById('banksList');
+            banksList.innerHTML = '';
+
+            indianBloodBanks.forEach(bank => {
+                const stockHtml = Object.entries(bank.bloodStock).map(([group, level]) => {
+                    const color = level === 'High' ? 'green' : level === 'Medium' ? 'orange' : 'red';
+                    return `<span style="color: ${color}; margin-right: 10px;">${group}: ${level}</span>`;
+                }).join('');
+
+                const bankCard = document.createElement('div');
+                bankCard.className = 'card';
+                bankCard.innerHTML = `
+                    <h3 class="text-xl font-bold mb-2">${bank.name}</h3>
+                    <p class="text-gray-600 mb-2">${bank.location}</p>
+                    <p class="mb-2"><strong>Address:</strong> ${bank.address}</p>
+                    <p class="mb-2"><strong>Phone:</strong> ${bank.phone}</p>
+                    <p class="mb-2"><strong>Email:</strong> ${bank.email}</p>
+                    <p class="mb-2"><strong>Rating:</strong> ${bank.rating}/5 (${bank.distance})</p>
+                    <div class="mb-4">
+                        <strong>Blood Stock:</strong><br>
+                        ${stockHtml}
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="contactBank('${bank.phone}')" class="btn" style="background: #3b82f6; color: white;">Contact</button>
+                        <button onclick="getDirections('${bank.address}')" class="btn" style="background: #10b981; color: white;">Directions</button>
+                    </div>
+                `;
+                banksList.appendChild(bankCard);
+            });
+        }
+
+        function searchBanks() {
+            const location = document.getElementById('searchLocation').value.toLowerCase();
+            const bloodGroup = document.getElementById('searchBloodGroup').value;
+            
+            const filteredBanks = indianBloodBanks.filter(bank => {
+                const locationMatch = !location || 
+                    bank.name.toLowerCase().includes(location) || 
+                    bank.location.toLowerCase().includes(location) ||
+                    bank.state.toLowerCase().includes(location);
+                
+                const bloodMatch = !bloodGroup || bank.bloodStock[bloodGroup] === 'High' || bank.bloodStock[bloodGroup] === 'Medium';
+                
+                return locationMatch && bloodMatch;
+            });
+
+            const banksList = document.getElementById('banksList');
+            banksList.innerHTML = '';
+
+            if (filteredBanks.length === 0) {
+                banksList.innerHTML = '<div class="text-center text-gray-500 py-8">No blood banks found matching your criteria.</div>';
+                return;
+            }
+
+            filteredBanks.forEach(bank => {
+                const stockHtml = Object.entries(bank.bloodStock).map(([group, level]) => {
+                    const color = level === 'High' ? 'green' : level === 'Medium' ? 'orange' : 'red';
+                    return `<span style="color: ${color}; margin-right: 10px;">${group}: ${level}</span>`;
+                }).join('');
+
+                const bankCard = document.createElement('div');
+                bankCard.className = 'card';
+                bankCard.innerHTML = `
+                    <h3 class="text-xl font-bold mb-2">${bank.name}</h3>
+                    <p class="text-gray-600 mb-2">${bank.location}</p>
+                    <p class="mb-2"><strong>Address:</strong> ${bank.address}</p>
+                    <p class="mb-2"><strong>Phone:</strong> ${bank.phone}</p>
+                    <p class="mb-2"><strong>Email:</strong> ${bank.email}</p>
+                    <p class="mb-2"><strong>Rating:</strong> ${bank.rating}/5 (${bank.distance})</p>
+                    <div class="mb-4">
+                        <strong>Blood Stock:</strong><br>
+                        ${stockHtml}
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="contactBank('${bank.phone}')" class="btn" style="background: #3b82f6; color: white;">Contact</button>
+                        <button onclick="getDirections('${bank.address}')" class="btn" style="background: #10b981; color: white;">Directions</button>
+                    </div>
+                `;
+                banksList.appendChild(bankCard);
+            });
+        }
+
+        function contactBank(phone) {
+            alert(`Calling ${phone}...\n\nIn a real application, this would initiate a phone call.`);
+        }
+
+        function getDirections(address) {
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        // User management and form handling
+        let registeredUsers = JSON.parse(localStorage.getItem('lifeFlowUsers')) || [];
+
+        // Tab switching function
+        function showTab(tabName) {
+            const registerTab = document.getElementById('registerTab');
+            const signInTab = document.getElementById('signInTab');
+            const registerForm = document.getElementById('registerForm');
+            const signInForm = document.getElementById('signInForm');
+            const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+
+            // Reset all tabs
+            registerTab.className = 'flex-1 py-2 px-4 rounded-md text-gray-600';
+            signInTab.className = 'flex-1 py-2 px-4 rounded-md text-gray-600';
+            registerForm.classList.add('hidden');
+            signInForm.classList.add('hidden');
+            forgotPasswordForm.classList.add('hidden');
+
+            if (tabName === 'register') {
+                registerTab.className = 'flex-1 py-2 px-4 rounded-md bg-white shadow-sm font-medium text-red-600';
+                registerForm.classList.remove('hidden');
+            } else if (tabName === 'signin') {
+                signInTab.className = 'flex-1 py-2 px-4 rounded-md bg-white shadow-sm font-medium text-red-600';
+                signInForm.classList.remove('hidden');
+            } else if (tabName === 'forgotPassword') {
+                forgotPasswordForm.classList.remove('hidden');
+            }
+        }
+
+        // Registration form submission
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userData = {
+                name: document.getElementById('regUserName').value,
+                email: document.getElementById('regUserEmail').value,
+                phone: document.getElementById('regUserPhone').value,
+                bloodGroup: document.getElementById('regUserBloodGroup').value,
+                password: document.getElementById('regUserPassword').value
+            };
+
+            // Check if user already exists
+            const existingUser = registeredUsers.find(user => 
+                user.email === userData.email || user.phone === userData.phone
+            );
+
+            if (existingUser) {
+                alert('User already exists with this email or phone number. Please sign in instead.');
+                showTab('signin');
+                return;
+            }
+
+            // Add user to storage
+            registeredUsers.push(userData);
+            localStorage.setItem('lifeFlowUsers', JSON.stringify(registeredUsers));
+
+            // Set user as registered
+            isUserRegistered = true;
+            userProfile = userData;
+            userName = userData.name;
+
+            // Update UI
+            updateUserStatus();
+
+            alert('Registration successful! Welcome to LifeFlow! You can now donate blood.');
+            this.reset();
+            
+            // Navigate to donate page
+            setTimeout(() => {
+                showPage('donate');
+            }, 1000);
+        });
+
+        // Sign in form submission
+        document.getElementById('signInFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const identifier = document.getElementById('signInIdentifier').value;
+            const password = document.getElementById('signInPassword').value;
+
+            // Find user by email or phone
+            const user = registeredUsers.find(user => 
+                (user.email === identifier || user.phone === identifier) && 
+                user.password === password
+            );
+
+            if (user) {
+                isUserRegistered = true;
+                userProfile = user;
+                userName = user.name;
+                
+                // Update UI
+                updateUserStatus();
+                
+                alert(`Welcome back, ${user.name}! You can now donate blood.`);
+                this.reset();
+                
+                // Navigate to donate page
+                setTimeout(() => {
+                    showPage('donate');
+                }, 1000);
+            } else {
+                alert('Invalid email/phone or password. Please try again.');
+            }
+        });
+
+        // Donation form submission
+        document.getElementById('donationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!isUserRegistered) {
+                alert('Please sign in first to schedule a donation.');
+                showPage('register');
+                showTab('signin');
+                return;
+            }
+
+            alert('Donation scheduled successfully! We will contact you soon.');
+            this.reset();
+        });
+
+        // Forgot password form submission
+        document.getElementById('forgotPasswordFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('forgotPasswordEmail').value;
+            
+            // Check if user exists with this email
+            const user = registeredUsers.find(user => user.email === email);
+            
+            if (user) {
+                // Generate reset token (in real app, this would be a secure token)
+                const resetToken = 'reset_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                // Store reset token with user data
+                user.resetToken = resetToken;
+                user.resetTokenExpiry = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+                localStorage.setItem('lifeFlowUsers', JSON.stringify(registeredUsers));
+                
+                // Create reset link
+                const resetLink = window.location.origin + window.location.pathname + '?reset=' + resetToken;
+                
+                // Send real email via Java notification service
+                fetch('http://localhost:8081/api/notifications/password-reset', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to: email,
+                        subject: 'Password Reset Request - LifeFlow Blood Bank',
+                        message: 'Password reset requested',
+                        recipientName: user.name || user.username,
+                        resetLink: resetLink
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`Password reset link sent to ${email}!\n\nPlease check your email inbox (and spam folder) for the reset link.\n\nThe email contains detailed instructions on how to reset your password.`);
+                    } else {
+                        alert('Failed to send password reset email. Please try again later.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending password reset email:', error);
+                    alert('Failed to send password reset email. Please make sure the notification service is running.\n\nFor demo purposes, you can copy this link and open it in a new tab:\n' + resetLink);
+                });
+                
+                this.reset();
+                showTab('signin');
+            } else {
+                alert('No account found with this email address. Please check your email or register a new account.');
+            }
+        });
+
+        // Password reset form submission
+        document.getElementById('passwordResetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match. Please try again.');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('Password must be at least 6 characters long.');
+                return;
+            }
+            
+            // Get reset token from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const resetToken = urlParams.get('reset');
+            
+            if (!resetToken) {
+                alert('Invalid reset link. Please request a new password reset.');
+                showPage('register');
+                return;
+            }
+            
+            // Find user with this reset token
+            const userIndex = registeredUsers.findIndex(user => 
+                user.resetToken === resetToken && 
+                user.resetTokenExpiry > Date.now()
+            );
+            
+            if (userIndex === -1) {
+                alert('Invalid or expired reset link. Please request a new password reset.');
+                showPage('register');
+                return;
+            }
+            
+            // Update password
+            registeredUsers[userIndex].password = newPassword;
+            delete registeredUsers[userIndex].resetToken;
+            delete registeredUsers[userIndex].resetTokenExpiry;
+            localStorage.setItem('lifeFlowUsers', JSON.stringify(registeredUsers));
+            
+            alert('Password updated successfully! You can now sign in with your new password.');
+            
+            // Clear URL parameters and redirect to sign in
+            window.history.replaceState({}, document.title, window.location.pathname);
+            showPage('register');
+            showTab('signin');
+        });
+
+        // Enhanced AI Chatbot Logic with Multi-language Support and Smart Navigation
+        let userName = '';
+        let userLanguage = 'english';
+        let conversationContext = {};
+        let isUserRegistered = false; // Track if user is registered
+        let userProfile = null; // Store user profile data
+
+        function toggleChatbot() {
+            const chatbotContainer = document.getElementById('chatbotContainer');
+            chatbotContainer.classList.toggle('hidden');
+        }
+
+        // Language detection function
+        function detectLanguage(text) {
+            const hindiPattern = /[\u0900-\u097F]/;
+            const englishPattern = /[a-zA-Z]/;
+            
+            if (hindiPattern.test(text)) {
+                return 'hindi';
+            } else if (englishPattern.test(text)) {
+                return 'english';
+            }
+            return 'english'; // default
+        }
+
+        // Name extraction function
+        function extractName(text) {
+            const namePatterns = [
+                /मेरा नाम ([\u0900-\u097F\s]+) है/i, // Hindi: मेरा नाम [name] है
+                /मैं ([\u0900-\u097F\s]+) हूं/i, // Hindi: मैं [name] हूं
+                /my name is ([a-zA-Z\s]+)/i, // English: my name is [name]
+                /i am ([a-zA-Z\s]+)/i, // English: i am [name]
+                /i'm ([a-zA-Z\s]+)/i, // English: i'm [name]
+                /call me ([a-zA-Z\s]+)/i, // English: call me [name]
+                /मुझे ([a-zA-Z\s]+) कहते हैं/i, // Hindi: मुझे [name] कहते हैं
+            ];
+
+            for (let pattern of namePatterns) {
+                const match = text.match(pattern);
+                if (match && match[1]) {
+                    return match[1].trim();
+                }
+            }
+            return null;
+        }
+
+        // Multi-language response function with smart navigation
+        function getResponse(language, key, userName = '', bloodGroup = '') {
+            const responses = {
+                english: {
+                    greeting: userName ? `Hello ${userName}! I'm Dr. LifeFlow, your AI blood donation assistant. How can I help you today?` : "Hello there! I'm Dr. LifeFlow, your AI blood donation assistant. How can I help you today?",
+                    nameCaptured: `Nice to meet you, ${userName}! I'll remember your name. How can I assist you with blood donation today?`,
+                    bloodBanks: "Perfect! I'm taking you directly to the Blood Banks page where you can search for blood banks near you. You can search by location or blood group!",
+                    bloodBanksSpecific: `Great! I'm taking you to the Blood Banks page where you can search for ${bloodGroup} blood specifically. You can filter by blood group and location!`,
+                    donate: isUserRegistered ? 
+                        "Great! Since you're already registered, I'm taking you directly to the Donate page where you can schedule your blood donation!" :
+                        "Great! To donate blood, you'll need to register first. I'm taking you to the Register page. After registration, you can easily sign in with your email or phone number!",
+                    donateRegistered: "Perfect! I'm taking you to the Donate page where you can schedule your blood donation. Your donation can save up to 3 lives!",
+                    signInPrompt: "I see you want to donate! Please sign in with your email or phone number to access the donation form. If you're not registered yet, please register first!",
+                    thanks: "You're welcome! Is there anything else I can help you with regarding blood donation?",
+                    bloodGroups: "We support all blood groups: A+, A-, B+, B+, AB+, AB-, O+, and O-. O+ is the most common blood group in India, while AB- is the rarest. Which blood group are you interested in?",
+                    contact: "You can find contact details for each blood bank on the 'Blood Banks' page. Just click on the 'Contact' button next to the bank you're interested in. All our listed blood banks are verified and reliable!",
+                    india: "Yes! We have comprehensive data for blood banks across India including Delhi, Mumbai, Bangalore, Chennai, Chandigarh, and other major cities. Each blood bank is verified and regularly updated with current blood stock levels.",
+                    emergency: "For emergency blood requirements, please contact the nearest blood bank directly using the contact information provided. You can also use the 'Directions' button to get the fastest route to the blood bank.",
+                    notUnderstood: "I'm sorry, I didn't understand that. Can you please rephrase in English or Hindi?"
+                },
+                hindi: {
+                    greeting: userName ? `नमस्ते ${userName}! मैं डॉ. लाइफफ्लो हूं, आपका AI रक्तदान सहायक। मैं आपकी कैसे मदद कर सकता हूं?` : "नमस्ते! मैं डॉ. लाइफफ्लो हूं, आपका AI रक्तदान सहायक। मैं आपकी कैसे मदद कर सकता हूं?",
+                    nameCaptured: `आपसे मिलकर खुशी हुई, ${userName}! मैं आपका नाम याद रखूंगा। रक्तदान के बारे में मैं आपकी कैसे मदद कर सकता हूं?`,
+                    bloodBanks: "बिल्कुल! मैं आपको सीधे Blood Banks पेज पर ले जा रहा हूं जहां आप अपने आस-पास के रक्त बैंकों को खोज सकते हैं। आप स्थान या रक्त समूह के अनुसार खोज सकते हैं!",
+                    bloodBanksSpecific: `बहुत अच्छा! मैं आपको Blood Banks पेज पर ले जा रहा हूं जहां आप ${bloodGroup} रक्त समूह विशेष रूप से खोज सकते हैं। आप रक्त समूह और स्थान के अनुसार फ़िल्टर कर सकते हैं!`,
+                    donate: isUserRegistered ? 
+                        "बहुत अच्छा! चूंकि आप पहले से ही पंजीकृत हैं, मैं आपको सीधे Donate पेज पर ले जा रहा हूं जहां आप अपना रक्तदान शेड्यूल कर सकते हैं!" :
+                        "बहुत अच्छा! रक्तदान करने के लिए, आपको पहले पंजीकरण करना होगा। मैं आपको Register पेज पर ले जा रहा हूं। पंजीकरण के बाद, आप अपने ईमेल या फोन नंबर से आसानी से साइन इन कर सकते हैं!",
+                    donateRegistered: "बिल्कुल सही! मैं आपको Donate पेज पर ले जा रहा हूं जहां आप अपना रक्तदान शेड्यूल कर सकते हैं। आपका दान 3 जीवन बचा सकता है!",
+                    signInPrompt: "मैं देख रहा हूं कि आप दान करना चाहते हैं! कृपया दान फॉर्म तक पहुंचने के लिए अपने ईमेल या फोन नंबर से साइन इन करें। यदि आप अभी तक पंजीकृत नहीं हैं, तो कृपया पहले पंजीकरण करें!",
+                    thanks: "आपका स्वागत है! क्या मैं रक्तदान के बारे में आपकी और कुछ मदद कर सकता हूं?",
+                    bloodGroups: "हम सभी रक्त समूहों का समर्थन करते हैं: A+, A-, B+, B-, AB+, AB-, O+, और O-। O+ भारत में सबसे आम रक्त समूह है, जबकि AB- सबसे दुर्लभ है। आप किस रक्त समूह में रुचि रखते हैं?",
+                    contact: "आप 'Blood Banks' पेज पर प्रत्येक रक्त बैंक के संपर्क विवरण पा सकते हैं। बस आपके इच्छित बैंक के बगल में 'Contact' बटन पर क्लिक करें। हमारे सभी सूचीबद्ध रक्त बैंक सत्यापित और विश्वसनीय हैं!",
+                    india: "हाँ! हमारे पास दिल्ली, मुंबई, बैंगलोर, चेन्नई, चंडीगढ़ और अन्य प्रमुख शहरों सहित भारत भर के रक्त बैंकों का व्यापक डेटा है। प्रत्येक रक्त बैंक सत्यापित है और वर्तमान रक्त स्टॉक स्तरों के साथ नियमित रूप से अपडेट किया जाता है।",
+                    emergency: "आपातकालीन रक्त आवश्यकताओं के लिए, कृपया प्रदान की गई संपर्क जानकारी का उपयोग करके निकटतम रक्त बैंक से सीधे संपर्क करें। आप रक्त बैंक तक सबसे तेज़ मार्ग प्राप्त करने के लिए 'Directions' बटन का भी उपयोग कर सकते हैं।",
+                    notUnderstood: "माफ़ करें, मुझे यह समझ नहीं आया। क्या आप कृपया अंग्रेजी या हिंदी में दोबारा कह सकते हैं?"
+                }
+            };
+            return responses[language][key] || responses.english[key];
+        }
+
+        // Smart navigation function
+        function navigateToPage(pageId, bloodGroup = '') {
+            showPage(pageId);
+            if (pageId === 'banks' && bloodGroup) {
+                // Set the blood group filter
+                setTimeout(() => {
+                    const bloodGroupSelect = document.getElementById('searchBloodGroup');
+                    if (bloodGroupSelect) {
+                        bloodGroupSelect.value = bloodGroup;
+                    }
+                }, 100);
+            }
+        }
+
+        // Blood group extraction function
+        function extractBloodGroup(text) {
+            const bloodGroupPatterns = [
+                /(A\+|A-|B\+|B-|AB\+|AB-|O\+|O-)/i,
+                /(a positive|a negative|b positive|b negative|ab positive|ab negative|o positive|o negative)/i,
+                /(ए पॉजिटिव|ए नेगेटिव|बी पॉजिटिव|बी नेगेटिव|एबी पॉजिटिव|एबी नेगेटिव|ओ पॉजिटिव|ओ नेगेटिव)/i
+            ];
+
+            for (let pattern of bloodGroupPatterns) {
+                const match = text.match(pattern);
+                if (match && match[1]) {
+                    const group = match[1].toUpperCase();
+                    // Convert text to standard format
+                    if (group.includes('POSITIVE') || group.includes('पॉजिटिव')) {
+                        return group.replace('POSITIVE', '+').replace('पॉजिटिव', '+');
+                    } else if (group.includes('NEGATIVE') || group.includes('नेगेटिव')) {
+                        return group.replace('NEGATIVE', '-').replace('नेगेटिव', '-');
+                    }
+                    return group;
+                }
+            }
+            return null;
+        }
+
+        function sendChatbotMessage() {
+            const input = document.getElementById('chatbotInput');
+            const message = input.value.trim();
+            if (message === '') return;
+
+            const messagesContainer = document.getElementById('chatbotMessages');
+            const detectedLanguage = detectLanguage(message);
+
+            // User message
+            const userBubble = document.createElement('div');
+            userBubble.className = 'message-bubble message-user';
+            userBubble.innerHTML = `
+                <div class="message-content">
+                    <div class="message-text">${message}</div>
+                    <div class="message-time">Just now</div>
+                </div>
+            `;
+            messagesContainer.appendChild(userBubble);
+
+            input.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Process message and generate response
+            setTimeout(() => {
+                const botBubble = document.createElement('div');
+                botBubble.className = 'message-bubble message-bot';
+                let botResponse = '';
+                let shouldNavigate = false;
+                let navigateTo = '';
+                let bloodGroup = '';
+
+                // Extract name if present
+                const extractedName = extractName(message);
+                if (extractedName && !userName) {
+                    userName = extractedName;
+                    botResponse = getResponse(detectedLanguage, 'nameCaptured', userName);
+                } else {
+                    // Process different types of messages
+                    const lowerMessage = message.toLowerCase();
+                    
+                    // Greeting patterns
+                    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || 
+                        lowerMessage.includes('नमस्ते') || lowerMessage.includes('हैलो')) {
+                        botResponse = getResponse(detectedLanguage, 'greeting', userName);
+                    }
+                    // Blood banks with specific blood group
+                    else if ((lowerMessage.includes('blood bank') || lowerMessage.includes('रक्त बैंक') ||
+                             lowerMessage.includes('find blood') || lowerMessage.includes('खोजें') ||
+                             lowerMessage.includes('nearby') || lowerMessage.includes('पास में')) &&
+                             (lowerMessage.includes('a+') || lowerMessage.includes('b+') || 
+                              lowerMessage.includes('o+') || lowerMessage.includes('ab+') ||
+                              lowerMessage.includes('a-') || lowerMessage.includes('b-') || 
+                              lowerMessage.includes('o-') || lowerMessage.includes('ab-') ||
+                              lowerMessage.includes('blood group') || lowerMessage.includes('रक्त समूह'))) {
+                        
+                        bloodGroup = extractBloodGroup(message);
+                        if (bloodGroup) {
+                            botResponse = getResponse(detectedLanguage, 'bloodBanksSpecific', userName, bloodGroup);
+                            shouldNavigate = true;
+                            navigateTo = 'banks';
+                        } else {
+                            botResponse = getResponse(detectedLanguage, 'bloodBanks');
+                            shouldNavigate = true;
+                            navigateTo = 'banks';
+                        }
+                    }
+                    // General blood banks search
+                    else if (lowerMessage.includes('blood bank') || lowerMessage.includes('रक्त बैंक') ||
+                             lowerMessage.includes('find blood') || lowerMessage.includes('खोजें') ||
+                             lowerMessage.includes('nearby') || lowerMessage.includes('पास में')) {
+                        botResponse = getResponse(detectedLanguage, 'bloodBanks');
+                        shouldNavigate = true;
+                        navigateTo = 'banks';
+                    }
+                    // Donation requests
+                    else if (lowerMessage.includes('donate') || lowerMessage.includes('दान') ||
+                             lowerMessage.includes('rakhtdan') || lowerMessage.includes('रक्तदान') ||
+                             lowerMessage.includes('schedule') || lowerMessage.includes('शेड्यूल')) {
+                        
+                        if (isUserRegistered) {
+                            botResponse = getResponse(detectedLanguage, 'donateRegistered');
+                            shouldNavigate = true;
+                            navigateTo = 'donate';
+                        } else {
+                            botResponse = getResponse(detectedLanguage, 'donate');
+                            shouldNavigate = true;
+                            navigateTo = 'register';
+                        }
+                    }
+                    // Thanks
+                    else if (lowerMessage.includes('thank') || lowerMessage.includes('धन्यवाद') ||
+                             lowerMessage.includes('thanks')) {
+                        botResponse = getResponse(detectedLanguage, 'thanks');
+                    }
+                    // Blood groups
+                    else if (lowerMessage.includes('blood group') || lowerMessage.includes('रक्त समूह') ||
+                             lowerMessage.includes('a+') || lowerMessage.includes('b+') ||
+                             lowerMessage.includes('o+') || lowerMessage.includes('ab+')) {
+                        botResponse = getResponse(detectedLanguage, 'bloodGroups');
+                    }
+                    // Contact
+                    else if (lowerMessage.includes('contact') || lowerMessage.includes('संपर्क') ||
+                             lowerMessage.includes('phone') || lowerMessage.includes('फोन')) {
+                        botResponse = getResponse(detectedLanguage, 'contact');
+                    }
+                    // India specific
+                    else if (lowerMessage.includes('india') || lowerMessage.includes('भारत') ||
+                             lowerMessage.includes('delhi') || lowerMessage.includes('मुंबई') ||
+                             lowerMessage.includes('mumbai')) {
+                        botResponse = getResponse(detectedLanguage, 'india');
+                    }
+                    // Emergency
+                    else if (lowerMessage.includes('emergency') || lowerMessage.includes('आपातकाल') ||
+                             lowerMessage.includes('urgent') || lowerMessage.includes('जरूरी')) {
+                        botResponse = getResponse(detectedLanguage, 'emergency');
+                    }
+                    // Default response
+                    else {
+                        botResponse = getResponse(detectedLanguage, 'notUnderstood');
+                    }
+                }
+
+                botBubble.innerHTML = `
+                    <div class="message-avatar">👨‍⚕️</div>
+                    <div class="message-content">
+                        <div class="message-text">${botResponse}</div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                `;
+                messagesContainer.appendChild(botBubble);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                // Navigate to appropriate page if needed
+                if (shouldNavigate) {
+                    setTimeout(() => {
+                        navigateToPage(navigateTo, bloodGroup);
+                    }, 1500);
+                }
+            }, 1000);
+        }
+
+        document.getElementById('chatbotInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendChatbotMessage();
+            }
+        });
+
+        // Sign out function
+        function signOut() {
+            isUserRegistered = false;
+            userProfile = null;
+            userName = '';
+            
+            // Update UI
+            updateUserStatus();
+            
+            alert('Signed out successfully!');
+        }
+
+        // Update user status display
+        function updateUserStatus() {
+            const authButton = document.getElementById('authButton');
+            const userStatus = document.getElementById('userStatus');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+
+            if (isUserRegistered && userProfile) {
+                authButton.classList.add('hidden');
+                userStatus.classList.remove('hidden');
+                userNameDisplay.textContent = userProfile.name;
+            } else {
+                authButton.classList.remove('hidden');
+                userStatus.classList.add('hidden');
+                userNameDisplay.textContent = '';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBloodBanks();
+            updateUserStatus();
+            
+            // Check for password reset token in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const resetToken = urlParams.get('reset');
+            if (resetToken) {
+                showPage('passwordReset');
+            }
+        });
+    </script>
+
+    <!-- Password Reset Page -->
+    <div id="passwordReset" class="page hidden">
+        <div class="max-w-2xl mx-auto p-6">
+            <div class="card">
+                <h2 class="text-2xl font-bold mb-6">Set New Password</h2>
+                <form id="passwordResetForm">
+                    <div class="mb-4">
+                        <label class="block mb-2">New Password</label>
+                        <input type="password" id="newPassword" class="w-full p-2 border rounded" placeholder="Enter new password" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="w-full p-2 border rounded" placeholder="Confirm new password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Update Password</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-600">Remember your password? <button onclick="showPage('register')" class="text-red-600 hover:underline">Sign In</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

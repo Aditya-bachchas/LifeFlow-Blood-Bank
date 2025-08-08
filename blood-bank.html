@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeFlow Blood Bank</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Arial', sans-serif; }
+        .btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+        .btn-primary { background: #ef4444; color: white; border: none; }
+        .card { background: white; border-radius: 12px; padding: 20px; margin: 10px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .page { display: none; }
+        .page.active { display: block; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg p-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-red-600">LifeFlow Blood Bank</h1>
+            <div class="space-x-4">
+                <button onclick="showPage('home')" class="btn">Home</button>
+                <button onclick="showPage('banks')" class="btn">Blood Banks</button>
+                <button onclick="showPage('donate')" class="btn">Donate</button>
+                <button onclick="showPage('register')" class="btn">Register</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="max-w-6xl mx-auto p-6">
+            <h1 class="text-4xl font-bold text-center mb-8">Save Lives Through Blood Donation</h1>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card text-center">
+                    <h3 class="text-2xl font-bold text-red-600" id="totalDonors">15,420</h3>
+                    <p>Total Donors</p>
+                </div>
+                <div class="card text-center">
+                    <h3 class="text-2xl font-bold text-red-600" id="totalBanks">3</h3>
+                    <p>Blood Banks</p>
+                </div>
+                <div class="card text-center">
+                    <h3 class="text-2xl font-bold text-red-600" id="livesSaved">46,260</h3>
+                    <p>Lives Saved</p>
+                </div>
+            </div>
+            <div class="text-center">
+                <button onclick="showPage('banks')" class="btn btn-primary mr-4">Find Blood Banks</button>
+                <button onclick="showPage('donate')" class="btn btn-primary">Donate Blood</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blood Banks Page -->
+    <div id="banks" class="page">
+        <div class="max-w-6xl mx-auto p-6">
+            <h2 class="text-3xl font-bold mb-6">Blood Banks</h2>
+            <div class="mb-6">
+                <input type="text" id="searchLocation" placeholder="Search by location..." class="p-2 border rounded mr-2">
+                <select id="searchBloodGroup" class="p-2 border rounded mr-2">
+                    <option value="">All Blood Groups</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+                <button onclick="searchBanks()" class="btn btn-primary">Search</button>
+            </div>
+            <div id="banksList"></div>
+        </div>
+    </div>
+
+    <!-- Donate Page -->
+    <div id="donate" class="page">
+        <div class="max-w-2xl mx-auto p-6">
+            <div class="card">
+                <h2 class="text-2xl font-bold mb-6">Schedule Blood Donation</h2>
+                <form id="donationForm">
+                    <div class="mb-4">
+                        <label class="block mb-2">Full Name</label>
+                        <input type="text" id="donorName" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Blood Group</label>
+                        <select id="donorBloodGroup" class="w-full p-2 border rounded" required>
+                            <option value="">Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Phone Number</label>
+                        <input type="tel" id="donorPhone" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Preferred Date</label>
+                        <input type="date" id="donorDate" class="w-full p-2 border rounded" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Schedule Donation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="register" class="page">
+        <div class="max-w-2xl mx-auto p-6">
+            <div class="card">
+                <h2 class="text-2xl font-bold mb-6">Register Account</h2>
+                <form id="registrationForm">
+                    <div class="mb-4">
+                        <label class="block mb-2">Full Name</label>
+                        <input type="text" id="userName" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Email</label>
+                        <input type="email" id="userEmail" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Phone</label>
+                        <input type="tel" id="userPhone" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Blood Group</label>
+                        <select id="userBloodGroup" class="w-full p-2 border rounded" required>
+                            <option value="">Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Password</label>
+                        <input type="password" id="userPassword" class="w-full p-2 border rounded" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cloud Data - Simulated API
+        const bloodBanks = [
+            {
+                id: 1,
+                name: "City General Hospital Blood Bank",
+                location: "Downtown Medical Center",
+                address: "123 Medical Drive, Downtown",
+                phone: "+1-555-0123",
+                email: "bloodbank@citygeneral.com",
+                bloodStock: {
+                    "A+": "High",
+                    "A-": "Medium",
+                    "B+": "High",
+                    "B-": "Low",
+                    "AB+": "Medium",
+                    "AB-": "Low",
+                    "O+": "High",
+                    "O-": "Medium"
+                },
+                rating: 4.8,
+                distance: "2.3 km"
+            },
+            {
+                id: 2,
+                name: "Red Cross Blood Center",
+                location: "Community Health Plaza",
+                address: "456 Health Avenue, Midtown",
+                phone: "+1-555-0456",
+                email: "donate@redcross.org",
+                bloodStock: {
+                    "A+": "Medium",
+                    "A-": "High",
+                    "B+": "Medium",
+                    "B-": "High",
+                    "AB+": "Low",
+                    "AB-": "Medium",
+                    "O+": "High",
+                    "O-": "High"
+                },
+                rating: 4.9,
+                distance: "5.1 km"
+            },
+            {
+                id: 3,
+                name: "Emergency Blood Services",
+                location: "Emergency Medical Complex",
+                address: "789 Emergency Road, Uptown",
+                phone: "+1-555-0789",
+                email: "emergency@bloodservices.com",
+                bloodStock: {
+                    "A+": "High",
+                    "A-": "High",
+                    "B+": "High",
+                    "B-": "High",
+                    "AB+": "High",
+                    "AB-": "High",
+                    "O+": "High",
+                    "O-": "High"
+                },
+                rating: 4.7,
+                distance: "8.7 km"
+            }
+        ];
+
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Load data for specific pages
+            if (pageId === 'banks') {
+                loadBloodBanks();
+            }
+        }
+
+        function loadBloodBanks() {
+            const banksList = document.getElementById('banksList');
+            banksList.innerHTML = '';
+
+            bloodBanks.forEach(bank => {
+                const stockHtml = Object.entries(bank.bloodStock).map(([group, level]) => {
+                    const color = level === 'High' ? 'green' : level === 'Medium' ? 'orange' : 'red';
+                    return `<span style="color: ${color}; margin-right: 10px;">${group}: ${level}</span>`;
+                }).join('');
+
+                const bankCard = document.createElement('div');
+                bankCard.className = 'card';
+                bankCard.innerHTML = `
+                    <h3 class="text-xl font-bold mb-2">${bank.name}</h3>
+                    <p class="text-gray-600 mb-2">${bank.location}</p>
+                    <p class="mb-2"><strong>Address:</strong> ${bank.address}</p>
+                    <p class="mb-2"><strong>Phone:</strong> ${bank.phone}</p>
+                    <p class="mb-2"><strong>Email:</strong> ${bank.email}</p>
+                    <p class="mb-2"><strong>Rating:</strong> ${bank.rating}/5 (${bank.distance})</p>
+                    <div class="mb-4">
+                        <strong>Blood Stock:</strong><br>
+                        ${stockHtml}
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="contactBank('${bank.phone}')" class="btn" style="background: #3b82f6; color: white;">Contact</button>
+                        <button onclick="getDirections('${bank.address}')" class="btn" style="background: #10b981; color: white;">Directions</button>
+                    </div>
+                `;
+                banksList.appendChild(bankCard);
+            });
+        }
+
+        function searchBanks() {
+            const location = document.getElementById('searchLocation').value.toLowerCase();
+            const bloodGroup = document.getElementById('searchBloodGroup').value;
+            
+            const filteredBanks = bloodBanks.filter(bank => {
+                const locationMatch = !location || 
+                    bank.name.toLowerCase().includes(location) || 
+                    bank.location.toLowerCase().includes(location);
+                
+                const bloodMatch = !bloodGroup || bank.bloodStock[bloodGroup] === 'High' || bank.bloodStock[bloodGroup] === 'Medium';
+                
+                return locationMatch && bloodMatch;
+            });
+
+            const banksList = document.getElementById('banksList');
+            banksList.innerHTML = '';
+
+            if (filteredBanks.length === 0) {
+                banksList.innerHTML = '<div class="text-center text-gray-500 py-8">No blood banks found matching your criteria.</div>';
+                return;
+            }
+
+            filteredBanks.forEach(bank => {
+                const stockHtml = Object.entries(bank.bloodStock).map(([group, level]) => {
+                    const color = level === 'High' ? 'green' : level === 'Medium' ? 'orange' : 'red';
+                    return `<span style="color: ${color}; margin-right: 10px;">${group}: ${level}</span>`;
+                }).join('');
+
+                const bankCard = document.createElement('div');
+                bankCard.className = 'card';
+                bankCard.innerHTML = `
+                    <h3 class="text-xl font-bold mb-2">${bank.name}</h3>
+                    <p class="text-gray-600 mb-2">${bank.location}</p>
+                    <p class="mb-2"><strong>Address:</strong> ${bank.address}</p>
+                    <p class="mb-2"><strong>Phone:</strong> ${bank.phone}</p>
+                    <p class="mb-2"><strong>Email:</strong> ${bank.email}</p>
+                    <p class="mb-2"><strong>Rating:</strong> ${bank.rating}/5 (${bank.distance})</p>
+                    <div class="mb-4">
+                        <strong>Blood Stock:</strong><br>
+                        ${stockHtml}
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="contactBank('${bank.phone}')" class="btn" style="background: #3b82f6; color: white;">Contact</button>
+                        <button onclick="getDirections('${bank.address}')" class="btn" style="background: #10b981; color: white;">Directions</button>
+                    </div>
+                `;
+                banksList.appendChild(bankCard);
+            });
+        }
+
+        function contactBank(phone) {
+            alert(`Calling ${phone}...\n\nIn a real application, this would initiate a phone call.`);
+        }
+
+        function getDirections(address) {
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        // Form submissions
+        document.getElementById('donationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Donation scheduled successfully! We will contact you soon.');
+            this.reset();
+        });
+
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Registration successful! Welcome to LifeFlow!');
+            this.reset();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBloodBanks();
+        });
+    </script>
+</body>
+</html>
