@@ -17,6 +17,17 @@ A comprehensive full-stack blood bank management system built with modern techno
 - **Entity Framework Core** - ORM for .NET
 - **SQL Server** - Primary database
 
+git checkout -b add-website-preview
+
+## 🌐 Website Preview  
+
+**Preview:** After executing this code, it will look like this:
+ "[LifeFlow Blood bank](https://16331842-02a9-4e87-9a93-490cc2278218-00-fbwrvpapqpkf.riker.replit.dev/)"
+ 
+**Rechange:** This code has been slightly customized for an Indian website.   "[LifeFlow Blood bank](https://3fbb1138-223a-4fe5-83ff-51f589abea1a-00-2jk7uub6jg4ts.spock.replit.dev/)"
+ 
+
+
 ### Features
 - ✅ User authentication and authorization
 - ✅ Blood donation management
