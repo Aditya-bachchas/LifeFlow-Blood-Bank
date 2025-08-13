@@ -24,7 +24,26 @@ git checkout -b add-website-preview
 **Preview:** After executing this code, it will look like this:
  "[LifeFlow Blood bank](https://16331842-02a9-4e87-9a93-490cc2278218-00-fbwrvpapqpkf.riker.replit.dev/)"
  
+ <img width="959" height="449" alt="image" src="https://github.com/user-attachments/assets/c7903ffe-7c19-456b-848d-cd4b24ed3ae0" />
+ <img width="959" height="449" alt="image" src="https://github.com/user-attachments/assets/e8c98550-ffcf-4c43-ae1f-93fe8d154761" />
+ <img width="959" height="444" alt="image" src="https://github.com/user-attachments/assets/789bc5ca-5afe-416a-aed6-38415206347c" />
+ <img width="946" height="436" alt="image" src="https://github.com/user-attachments/assets/46a50c7e-7a5b-402e-b04e-ea0bc9b577b3" />
+ <img width="959" height="449" alt="image" src="https://github.com/user-attachments/assets/bd5087f2-a261-47ea-bf07-2e3b6f206f5d" />
+ <img width="958" height="442" alt="image" src="https://github.com/user-attachments/assets/60f1b7c8-f4c6-461b-b8ae-a33eddd63e3e" />
+ <img width="959" height="439" alt="image" src="https://github.com/user-attachments/assets/7b11bdd4-babf-4b9e-b406-f9d172afdd9e" />
+ <img width="959" height="443" alt="image" src="https://github.com/user-attachments/assets/563c85fb-ee14-4c25-a5d2-5f07f2d4b76e" />
+ <img width="959" height="440" alt="image" src="https://github.com/user-attachments/assets/8bc140c8-1633-47b9-9421-09c1760827dd" />
+ <img width="957" height="436" alt="image" src="https://github.com/user-attachments/assets/f394f9aa-39fe-4fc4-ab15-100162519330" />
+
 **Rechange:** This code has been slightly customized for an Indian website.   "[LifeFlow Blood bank](https://3fbb1138-223a-4fe5-83ff-51f589abea1a-00-2jk7uub6jg4ts.spock.replit.dev/)"
+
+ <img width="947" height="413" alt="image" src="https://github.com/user-attachments/assets/722bd0c8-90ef-4663-a3a0-18319b2605e6" />
+ <img width="959" height="411" alt="image" src="https://github.com/user-attachments/assets/19435186-fc16-44fd-bcd4-d9e1b8c17b0a" />
+ <img width="959" height="406" alt="image" src="https://github.com/user-attachments/assets/d71b3f1d-6ae0-4e00-85ec-ebe59f19a321" />
+ <img width="959" height="409" alt="image" src="https://github.com/user-attachments/assets/aaa8271b-a1ee-4c13-8489-7aa18b72b2d8" />
+ <img width="959" height="356" alt="image" src="https://github.com/user-attachments/assets/49baaf80-78cd-4d75-af8c-3066ec999819" />
+ <img width="947" height="355" alt="image" src="https://github.com/user-attachments/assets/702908c1-18f0-4bb0-9ab4-ccc527debf7e" />
+
  
 
 
