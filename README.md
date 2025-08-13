@@ -46,7 +46,6 @@ git checkout -b add-website-preview
 
  
 
-
 ### Features
 - ✅ User authentication and authorization
 - ✅ Blood donation management
@@ -253,7 +252,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For support and questions:
 - Email: support@lifeflow.com
-- Documentation: https://docs.lifeflow.com
+- Documentation: [Download](https://drive.google.com/drive/folders/1CXPz8EGMLmD5cCMiGvWYP6J2O8aE6e4H)
 - Issues: GitHub Issues
 
 ---
