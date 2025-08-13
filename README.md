@@ -36,7 +36,9 @@ git checkout -b add-website-preview
  <img width="957" height="436" alt="image" src="https://github.com/user-attachments/assets/f394f9aa-39fe-4fc4-ab15-100162519330" />
 
 
-
+<br>
+<br>
+<br>
 
 **Rechange:** This code has been slightly customized for an Indian website.   "[LifeFlow Blood bank](https://3fbb1138-223a-4fe5-83ff-51f589abea1a-00-2jk7uub6jg4ts.spock.replit.dev/)"
 
@@ -46,9 +48,8 @@ git checkout -b add-website-preview
  <img width="959" height="409" alt="image" src="https://github.com/user-attachments/assets/aaa8271b-a1ee-4c13-8489-7aa18b72b2d8" />
  <img width="959" height="356" alt="image" src="https://github.com/user-attachments/assets/49baaf80-78cd-4d75-af8c-3066ec999819" />
  <img width="947" height="355" alt="image" src="https://github.com/user-attachments/assets/702908c1-18f0-4bb0-9ab4-ccc527debf7e" />
-
+<br>
  
-
 ### Features
 - ✅ User authentication and authorization
 - ✅ Blood donation management
