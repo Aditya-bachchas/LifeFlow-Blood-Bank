@@ -33,20 +33,6 @@
     "@types/node": "^20.8.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "@types/three": "^0.157.0",
-    "typescript": "^5.2.0",
-    "eslint": "^8.51.0",
-    "eslint-config-next": "^14.0.0"
-  },
-  "keywords": [
-    "blood-bank",
-    "donation",
-    "3d-animations",
-    "ai-chatbot",
-    "react",
-    "nextjs"
-  ],
-  "author": "Blood Bank Team",
-  "license": "MIT"
+    "@types/three": "^0.157.0"
+  }
 }
-
